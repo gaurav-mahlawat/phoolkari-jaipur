@@ -1,0 +1,6 @@
+'use client';
+import Link from 'next/link';
+import { useState } from 'react';
+import { Heart, Star } from 'lucide-react';
+import type { Product } from '../lib/products';import {money} from '../lib/products';
+export function ProductCard({product}:{product:Product}){const [liked,setLiked]=useState(false);return <article className="product-card"><Link href={`/products/${product.slug}`} className="product-image"><img src={product.image} alt={product.name}/><img className="swap-image" src={product.image2} alt=""/><button className={`heart ${liked?'liked':''}`} onClick={e=>{e.preventDefault();setLiked(!liked)}} aria-label="Save to wishlist"><Heart size={18} fill={liked?'currentColor':'none'}/></button>{product.badge&&<span className="product-badge">{product.badge}</span>}</Link><div className="product-meta"><div className="product-title-row"><Link href={`/products/${product.slug}`} className="product-name">{product.name}</Link><span className="rating"><Star size={12} fill="currentColor"/> {product.rating}</span></div><div className="price-line"><b>{money(product.price)}</b>{product.compareAtPrice&&<del>{money(product.compareAtPrice)}</del>}</div><span className="fabric-label">{product.fabric} · Made with love</span></div></article>}

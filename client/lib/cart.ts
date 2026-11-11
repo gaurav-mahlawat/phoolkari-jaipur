@@ -1,0 +1,6 @@
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+import type { Product } from './products';
+type Line={product:Product;size:string;qty:number};
+type Cart={items:Line[];open:boolean;add:(product:Product,size:string)=>void;remove:(id:string,size:string)=>void;setQty:(id:string,size:string,qty:number)=>void;toggle:()=>void;clear:()=>void};
+export const useCart=create<Cart>()(persist((set)=>({items:[],open:false,add:(product,size)=>set(s=>{const available=product.sizeStock?.[size]??product.stock;if(available<1)return{open:true};const existing=s.items.find(x=>x.product.id===product.id&&x.size===size);return {items:existing?s.items.map(x=>x===existing?{...x,qty:Math.min(available,x.qty+1)}:x):[...s.items,{product,size,qty:1}],open:true}}),remove:(id,size)=>set(s=>({items:s.items.filter(x=>!(x.product.id===id&&x.size===size))})),setQty:(id,size,qty)=>set(s=>({items:qty<1?s.items.filter(x=>!(x.product.id===id&&x.size===size)):s.items.map(x=>{if(x.product.id!==id||x.size!==size)return x;const available=x.product.sizeStock?.[size]??x.product.stock;return{...x,qty:Math.min(available,qty)}}).filter(x=>x.qty>0)})),toggle:()=>set(s=>({open:!s.open})),clear:()=>set({items:[]})}),{name:'phoolkari-cart',skipHydration:true}));

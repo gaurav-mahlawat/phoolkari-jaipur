@@ -1,0 +1,7 @@
+node_modules/
+client/.next/
+client/out/
+client/.env.local
+server/.env
+server/data.json
+server/data.json.*.tmp
